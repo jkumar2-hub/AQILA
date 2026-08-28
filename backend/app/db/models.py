@@ -1,24 +1,146 @@
 """
-backend/app/db/models.py
-────────────────────────────────────────────────────────────────────────────
-AQILA — SQLite / SQLAlchemy ORM Models
+AQILA — SQLite ORM Models
 Owner: M4 — Backend / Platform / Integration
-
-PLACEHOLDER — Implementation begins at Hour 0 of the hackathon.
-
-P0 Tables (must exist by Hour 10):
-  sources       — ingested file records (source_id, file_name, modality, status, ...)
-  queries       — query history (query_id, query_text, response, timestamp, ...)
-
-P1 Tables:
-  evidence_edges — (P1) persisted graph edge records
-
-Engine: Async SQLAlchemy + aiosqlite
-DB file: ./data/aqila.db  (gitignored via data/)
-
-References:
-  - docs/DATA_SCHEMAS.md  — full table definitions
-  - docs/API_CONTRACTS.md — source_id, query_id UUID formats
 """
 
-# TODO (M4, Hour 0–2): Implement SQLAlchemy ORM models
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
+
+from .database import Base
+
+
+class Source(Base):
+    """
+    P0: Tracks all ingested source files.
+    """
+
+    __tablename__ = "sources"
+
+    source_id: Mapped[str] = mapped_column(
+        String,
+        primary_key=True,
+    )
+
+    file_name: Mapped[str] = mapped_column(
+        String,
+        nullable=False,
+    )
+
+    file_path: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    source_type: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    modality: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    status: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    chunk_count: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    file_created_at: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    created_at: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    error_message: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+
+class Query(Base):
+    """
+    P0: Stores user queries and generated responses.
+    """
+
+    __tablename__ = "queries"
+
+    query_id: Mapped[str] = mapped_column(
+        String,
+        primary_key=True,
+    )
+
+    query_text: Mapped[str] = mapped_column(
+        String,
+        nullable=False,
+    )
+
+    answer: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    response_time_ms: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    contradiction_found: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    created_at: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+
+class EvidenceEdge(Base):
+    """
+    P1: Persisted graph edge records for past queries.
+    """
+
+    __tablename__ = "evidence_edges"
+
+    edge_id: Mapped[str] = mapped_column(
+        String,
+        primary_key=True,
+    )
+
+    query_id: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    source_a: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    source_b: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    edge_type: Mapped[str | None] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    similarity: Mapped[float | None] = mapped_column(
+        nullable=True,
+    )
+
+    temporal_gap: Mapped[float | None] = mapped_column(
+        nullable=True,
+    )
