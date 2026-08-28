@@ -1,0 +1,20 @@
+{
+  "name": "aqila-frontend",
+  "version": "0.0.0",
+  "private": true,
+  "_comment": "PLACEHOLDER — M3 fills this during Hour 0 of the hackathon. Run: npm install (before hackathon, not during).",
+  "_stack": "React 18 + Vite 5 + TailwindCSS + shadcn/ui + TanStack Query v5",
+  "_owner": "M3 — Frontend / UX",
+  "_references": ["docs/API_CONTRACTS.md", "frontend/src/mocks/mock_response.json"],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "_TODO": "M3: Run 'npm create vite@latest' and install: react, react-dom, @tanstack/react-query, react-dropzone, react-force-graph-2d, @radix-ui/* (via shadcn/ui)"
+  },
+  "devDependencies": {
+    "_TODO": "M3: Add vite, tailwindcss, autoprefixer, postcss, typescript (if used)"
+  }
+}

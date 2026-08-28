@@ -1,0 +1,12 @@
+# AQILA — Frontend Lib / Utilities Directory
+# Owner: M3 — Frontend / UX
+#
+# PLACEHOLDER — M3 populates this directory during Hour 0 of the hackathon.
+#
+# Planned utilities:
+#   - apiClient.ts / api.js  — typed fetch wrapper for all AQILA API calls
+#   - constants.ts           — API base URL, citation colours, etc.
+#   - cn.ts                  — shadcn/ui class-name utility (if using shadcn)
+#
+# References:
+#   - docs/API_CONTRACTS.md — endpoint paths and response shapes

@@ -1,0 +1,22 @@
+# AQILA — Frontend Components Directory
+# Owner: M3 — Frontend / UX
+#
+# PLACEHOLDER — M3 populates this directory during Hour 0 of the hackathon.
+#
+# Stack: React 18 + Vite 5 + TailwindCSS + shadcn/ui + TanStack Query v5
+#
+# Planned P0 components (per v4.1 §3 M3):
+#   - UploadCard        — per-file ingest card with progress bar
+#   - QueryInput        — chat-style query input
+#   - AnswerDisplay     — answer text with [N] citation pills
+#   - CitationDrawer    — Radix Sheet: file name, type badge, snippet, page/timestamp
+#   - ContradictionBanner — visible when contradiction_found === true
+#   - EvidenceGraph     — react-force-graph-2d wrapper
+#   - Toast / Notifications
+#
+# P0 essential states for Upload, Query, Evidence pages:
+#   - Loading spinner, error state, empty state
+#
+# References:
+#   - docs/API_CONTRACTS.md        — AQILAResponse, Citation, EvidenceGraph
+#   - frontend/src/mocks/mock_response.json — mock data for development

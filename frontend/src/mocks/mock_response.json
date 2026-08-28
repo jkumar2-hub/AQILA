@@ -1,0 +1,88 @@
+{
+  "_comment": "AQILA — Mock AQILAResponse for M3 Frontend Development",
+  "_purpose": "M3 builds the full UI against this mock. Replace with real API calls once M4 integration is ready (Hour 5–7).",
+  "_contract": "See docs/API_CONTRACTS.md — AQILAResponse definition.",
+  "_rules": [
+    "NO embedding field — M4 strips this before building AQILAResponse",
+    "NO embedding_space field — M4 strips this before building AQILAResponse",
+    "Include 2 citations, 1 contradiction, and an EvidenceGraph with nodes + edges"
+  ],
+  "_TODO": "M3: Replace this stub with realistic mock data at Hour 0-2. Shape must match API_CONTRACTS.md AQILAResponse exactly.",
+  "query_id": "mock-query-id-001",
+  "answer": "Agent Mehra was confirmed at Sector 7 on March 15, 2024 [1]. A corroborating report also places Agent Mehra at the location, however it references March 25 [2].",
+  "citations": [
+    {
+      "num": 1,
+      "source_id": "mock-source-id-001",
+      "source_name": "field_report.pdf",
+      "modality": "text",
+      "page": 1,
+      "timestamp_start": null,
+      "timestamp_end": null,
+      "text": "Agent Mehra confirmed presence at Sector 7, eastern perimeter, on March 15 2024 at 0300 hrs."
+    },
+    {
+      "num": 2,
+      "source_id": "mock-source-id-002",
+      "source_name": "field_report_b.pdf",
+      "modality": "text",
+      "page": 1,
+      "timestamp_start": null,
+      "timestamp_end": null,
+      "text": "Operation FALCON — Agent Mehra confirmed. Date: March 25."
+    }
+  ],
+  "contradiction_found": true,
+  "contradiction_detail": {
+    "claim_a": "Operation FALCON crossing occurred on March 15 2024.",
+    "claim_b": "Operation FALCON crossing occurred on March 25.",
+    "source_a": "mock-source-id-001",
+    "source_b": "mock-source-id-002",
+    "conflict_type": "date",
+    "confidence": 0.91
+  },
+  "evidence": {
+    "nodes": [
+      {
+        "id": "mock-source-id-001",
+        "label": "field_report.pdf",
+        "modality": "text",
+        "color": "#1D9E75",
+        "confidence": 0.92
+      },
+      {
+        "id": "mock-source-id-002",
+        "label": "field_report_b.pdf",
+        "modality": "text",
+        "color": "#1D9E75",
+        "confidence": 0.87
+      }
+    ],
+    "edges": [
+      {
+        "source": "mock-source-id-001",
+        "target": "mock-source-id-002",
+        "edge_type": "semantic",
+        "similarity": 0.74,
+        "temporal_gap": null
+      }
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "mock-source-id-001",
+      "file_name": "field_report.pdf",
+      "modality": "text",
+      "chunk_count": 4,
+      "status": "indexed"
+    },
+    {
+      "source_id": "mock-source-id-002",
+      "file_name": "field_report_b.pdf",
+      "modality": "text",
+      "chunk_count": 2,
+      "status": "indexed"
+    }
+  ],
+  "response_time_ms": 4200
+}

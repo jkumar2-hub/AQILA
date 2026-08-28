@@ -1,0 +1,15 @@
+# AQILA — Frontend Hooks Directory
+# Owner: M3 — Frontend / UX
+#
+# PLACEHOLDER — M3 populates this directory during Hour 0 of the hackathon.
+#
+# Planned custom hooks (per v4.1 §3 M3):
+#   - useIngestStatus  — polls GET /api/ingest/status/{id} every 1s
+#   - useQuery         — TanStack Query hook for POST /api/query
+#   - useEvidence      — TanStack Query hook for GET /api/query/{id}/evidence
+#   - useSources       — P1: GET /api/sources
+#
+# Library: TanStack Query v5
+#
+# References:
+#   - docs/API_CONTRACTS.md — endpoint definitions and response shapes

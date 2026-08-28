@@ -1,0 +1,163 @@
+# =============================================================================
+# AQILA — .gitignore
+# Generated for: SIH 2026 · PS 25231 · Offline Multimodal Evidence Intelligence
+# Based on: AQILA Implementation Plan v4.1
+# =============================================================================
+
+# ── Python virtual environment ───────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Python cache & compiled files ───────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.egg
+*.egg-info/
+dist/
+build/
+*.spec
+.eggs/
+
+# ── Environment / secrets ────────────────────────────────────────────────────
+# Never commit real secrets. Use .env.example as the committed template.
+.env
+backend/.env
+*.env
+.env.*
+!.env.example
+!backend/.env.example
+secrets/
+*.secret
+*.key
+*.pem
+
+# ── Runtime data (gitignored per §6) ────────────────────────────────────────
+# ChromaDB / local vector-store
+data/
+data/chroma/
+data/uploads/
+chroma_db/
+*.chroma
+*.parquet
+
+# SQLite / local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# ── AI model weights / files (gitignored per §6) ────────────────────────────
+# Models must be pre-downloaded externally; never commit weights to the repo.
+models/
+*.bin
+*.safetensors
+*.gguf
+*.ggml
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.mlmodel
+*.onnx
+*.tflite
+sentence_transformers_cache/
+huggingface_cache/
+.cache/
+
+# ── faster-whisper / Whisper model files ─────────────────────────────────────
+whisper_models/
+faster_whisper_models/
+
+# ── OpenCLIP / CLIP model weights ───────────────────────────────────────────
+open_clip_cache/
+clip_cache/
+
+# ── Ollama pulled model storage (local) ─────────────────────────────────────
+# Ollama stores models outside the repo by default; included for safety.
+ollama_models/
+
+# ── Frontend build output (gitignored per §6) ───────────────────────────────
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# ── Node / JavaScript ────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.npm/
+.yarn/
+
+# ── Generated / temporary files ─────────────────────────────────────────────
+*.log
+*.tmp
+*.bak
+*.swp
+*.orig
+*.pid
+coverage/
+.nyc_output/
+htmlcov/
+.coverage
+.coverage.*
+*.cover
+*.coveralls
+
+# ── OS / editor temporary files ─────────────────────────────────────────────
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains / PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Vim/Emacs
+*.swp
+*.swo
+*~
+\#*\#
+.#*
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Test / coverage artifacts ────────────────────────────────────────────────
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# ── Docker ───────────────────────────────────────────────────────────────────
+# Docker images and volumes are external; do not commit generated compose state
+docker-compose.override.yml
+.docker/

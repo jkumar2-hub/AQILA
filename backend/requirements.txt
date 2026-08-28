@@ -1,0 +1,31 @@
+# AQILA — Backend Python Dependencies
+# Owner: M4 — Backend / Platform / Integration
+#
+# PLACEHOLDER — Fill in during Hour 0 of the hackathon.
+# Install ONLY after confirming all packages are available locally (offline requirement).
+# Run: pip install -r requirements.txt
+#
+# DO NOT run pip install during repository initialization.
+# The .venv is already configured separately.
+#
+# Key P0 dependencies (per v4.1 §21 Dependency Audit):
+#   fastapi
+#   uvicorn[standard]
+#   sqlalchemy[asyncio]
+#   aiosqlite
+#   chromadb
+#   sentence-transformers       # all-MiniLM-L6-v2 (384-dim)
+#   ollama                      # or httpx for Ollama REST API
+#   docling                     # PDF parsing primary (PyMuPDF fallback)
+#   PyMuPDF                     # PDF fallback parser
+#   networkx                    # Evidence graph (M2)
+#   python-dotenv
+#
+# Key P1 dependencies:
+#   faster-whisper              # Audio transcription (base model)
+#   open-clip-torch             # CLIP ViT-B-32 image embeddings
+#   python-docx                 # DOCX ingestion
+#
+# Reference: docs/DECISIONS_LOG.md for confirmed dependency versions
+
+# TODO (M4, Hour 0): Pin versions after confirming against installed .venv
