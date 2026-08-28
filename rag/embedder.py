@@ -1,33 +1,86 @@
-"""
-rag/embedder.py
-────────────────────────────────────────────────────────────────────────────
-AQILA — Text Embedding Module
-Owner: M1 — AI / ML + RAG Core
+import logging
 
-PLACEHOLDER — Implementation begins at Hour 0 of the hackathon.
+logger = logging.getLogger(__name__)
 
-PUBLIC API (M4 calls this; M2 must NOT import this module directly):
-  embed_texts(texts: list[str]) -> list[list[float]]
+# Private singleton instance
+_model = None
+_MODEL_NAME = "all-MiniLM-L6-v2"
 
-Responsibilities (per v4.1 §3 M1):
-  - Model: sentence-transformers all-MiniLM-L6-v2 (384-dim)
-  - Singleton pattern — model loaded once and cached
-  - embedding_space = "minilm" for all outputs
-  - Must be pre-downloaded before hackathon (no runtime model downloads)
 
-IMPORTANT CONTRACT RULE:
-  M2 (evidence/) must NOT import this module.
-  M2 reads embeddings exclusively from RetrievalResult.embedding
-  (populated by M1 from ChromaDB retrieval via include=['embeddings']).
-  This module is called only by M4's ingest and query pipelines.
+def _get_model():
+    """Lazily load and return the SentenceTransformer model singleton.
 
-Pre-download verification command (run before hackathon):
-  python -c "from sentence_transformers import SentenceTransformer;
-             SentenceTransformer('all-MiniLM-L6-v2')"
+    To strictly comply with offline, zero-network requirements after caching,
+    this attempts to load with local_files_only=True.
+    """
+    global _model
+    if _model is None:
+        logger.info(f"Loading embedding model {_MODEL_NAME} on CPU...")
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError as e:
+            raise ImportError("sentence-transformers is not installed.") from e
 
-References:
-  - docs/API_CONTRACTS.md  — RetrievalResult.embedding, embedding_space
-  - docs/DECISIONS_LOG.md  — score conversion formula (M1 documents after testing)
-"""
+        try:
+            # We explicitly target the CPU and prevent network calls.
+            # If it is not cached, this will fail exactly as required by the spec.
+            _model = SentenceTransformer(
+                _MODEL_NAME, device="cpu", local_files_only=True
+            )
+        except Exception as e:
+            raise RuntimeError(
+                f"Model '{_MODEL_NAME}' not found locally, and downloads are restricted. "
+                f"Please ensure it is downloaded and cached. Original error: {e}"
+            ) from e
 
-# TODO (M1, Hour 0–2): Implement embed_texts() singleton with MiniLM
+    return _model
+
+
+def embed_text(text: str) -> list[float]:
+    """Embed a single string into a 384-dimensional vector.
+
+    Outputs are normalized to unit length for cosine similarity calculations.
+
+    Args:
+        text: The string to embed.
+
+    Returns:
+        A list of floats representing the embedding vector.
+    """
+    if not isinstance(text, str):
+        raise TypeError(f"Expected a string, got {type(text)}")
+
+    model = _get_model()
+    # SentenceTransformer handles empty strings gracefully.
+    # We normalize embeddings to ensure direct compatibility with cosine
+    # similarity during retrieval.
+    embedding = model.encode(text, normalize_embeddings=True)
+    return embedding.tolist()
+
+
+def embed_texts(texts: list[str]) -> list[list[float]]:
+    """Embed a list of strings into 384-dimensional vectors.
+
+    Outputs are normalized to unit length for cosine similarity calculations.
+    Order is strictly preserved.
+
+    Args:
+        texts: A list of strings to embed.
+
+    Returns:
+        A list of lists of floats, representing the embedding vectors.
+    """
+    if not isinstance(texts, list):
+        raise TypeError(f"Expected a list of strings, got {type(texts)}")
+
+    for idx, t in enumerate(texts):
+        if not isinstance(t, str):
+            raise TypeError(f"Item at index {idx} is not a string: {type(t)}")
+
+    if not texts:
+        return []
+
+    model = _get_model()
+    # Batch encode
+    embeddings = model.encode(texts, normalize_embeddings=True)
+    return embeddings.tolist()
