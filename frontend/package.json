@@ -2,19 +2,31 @@
   "name": "aqila-frontend",
   "version": "0.0.0",
   "private": true,
-  "_comment": "PLACEHOLDER — M3 fills this during Hour 0 of the hackathon. Run: npm install (before hackathon, not during).",
-  "_stack": "React 18 + Vite 5 + TailwindCSS + shadcn/ui + TanStack Query v5",
   "_owner": "M3 — Frontend / UX",
+  "_stack": "React 18 + Vite 5 + TailwindCSS + shadcn/ui + TanStack Query v5",
   "_references": ["docs/API_CONTRACTS.md", "frontend/src/mocks/mock_response.json"],
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "_TODO": "M3: Run 'npm create vite@latest' and install: react, react-dom, @tanstack/react-query, react-dropzone, react-force-graph-2d, @radix-ui/* (via shadcn/ui)"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
+    "@tanstack/react-query": "^5.56.2",
+    "react-dropzone": "^14.3.5",
+    "react-force-graph-2d": "^1.26.2",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.2",
+    "lucide-react": "^0.439.0"
   },
   "devDependencies": {
-    "_TODO": "M3: Add vite, tailwindcss, autoprefixer, postcss, typescript (if used)"
+    "vite": "^5.4.8",
+    "@vitejs/plugin-react": "^4.3.1",
+    "tailwindcss": "^3.4.13",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47"
   }
 }
