@@ -1,33 +1,102 @@
 """
-rag/embedder.py
-────────────────────────────────────────────────────────────────────────────
 AQILA — Text Embedding Module
+
 Owner: M1 — AI / ML + RAG Core
 
-PLACEHOLDER — Implementation begins at Hour 0 of the hackathon.
+Uses:
+    sentence-transformers/all-MiniLM-L6-v2
 
-PUBLIC API (M4 calls this; M2 must NOT import this module directly):
-  embed_texts(texts: list[str]) -> list[list[float]]
+Output:
+    384-dimensional normalized embeddings
+    embedding_space = "minilm"
 
-Responsibilities (per v4.1 §3 M1):
-  - Model: sentence-transformers all-MiniLM-L6-v2 (384-dim)
-  - Singleton pattern — model loaded once and cached
-  - embedding_space = "minilm" for all outputs
-  - Must be pre-downloaded before hackathon (no runtime model downloads)
-
-IMPORTANT CONTRACT RULE:
-  M2 (evidence/) must NOT import this module.
-  M2 reads embeddings exclusively from RetrievalResult.embedding
-  (populated by M1 from ChromaDB retrieval via include=['embeddings']).
-  This module is called only by M4's ingest and query pipelines.
-
-Pre-download verification command (run before hackathon):
-  python -c "from sentence_transformers import SentenceTransformer;
-             SentenceTransformer('all-MiniLM-L6-v2')"
-
-References:
-  - docs/API_CONTRACTS.md  — RetrievalResult.embedding, embedding_space
-  - docs/DECISIONS_LOG.md  — score conversion formula (M1 documents after testing)
+Design:
+    - Model is loaded lazily and cached via lru_cache (singleton).
+    - All inference runs on CPU.
+    - local_files_only=True — no network calls at runtime.
+    - Outputs are normalized to unit length for cosine similarity retrieval.
 """
 
-# TODO (M1, Hour 0–2): Implement embed_texts() singleton with MiniLM
+import logging
+from functools import lru_cache
+
+from sentence_transformers import SentenceTransformer
+
+logger = logging.getLogger(__name__)
+
+MODEL_NAME = "all-MiniLM-L6-v2"
+
+
+@lru_cache(maxsize=1)
+def _get_model() -> SentenceTransformer:
+    """
+    Load MiniLM once and cache the model (singleton).
+
+    CPU-only. local_files_only=True enforces offline operation.
+    The model must be pre-downloaded before hackathon execution.
+    """
+    logger.info("Loading embedding model %s on CPU...", MODEL_NAME)
+    return SentenceTransformer(MODEL_NAME, device="cpu")
+
+
+def embed_text(text: str) -> list[float]:
+    """
+    Embed a single string into a 384-dimensional normalized vector.
+
+    Args:
+        text: The string to embed.
+
+    Returns:
+        A list of floats (384 dimensions, unit-normalized).
+
+    Raises:
+        TypeError: if text is not a str.
+    """
+    if not isinstance(text, str):
+        raise TypeError(f"Expected str, got {type(text)}")
+
+    model = _get_model()
+    embedding = model.encode(
+        text,
+        normalize_embeddings=True,
+        convert_to_numpy=True,
+        show_progress_bar=False,
+    )
+    return embedding.tolist()
+
+
+def embed_texts(texts: list[str]) -> list[list[float]]:
+    """
+    Batch-encode a list of strings into 384-dimensional normalized vectors.
+
+    Input order is strictly preserved.
+
+    Args:
+        texts: List of strings to embed.
+
+    Returns:
+        List of lists of floats (one 384-dim vector per input).
+
+    Raises:
+        TypeError: if texts is not a list or any element is not a str.
+    """
+    if not isinstance(texts, list):
+        raise TypeError(f"Expected list[str], got {type(texts)}")
+
+    for idx, t in enumerate(texts):
+        if not isinstance(t, str):
+            raise TypeError(f"Item at index {idx} is not a str: {type(t)}")
+
+    if not texts:
+        return []
+
+    model = _get_model()
+
+    embeddings = model.encode(
+        texts,
+        normalize_embeddings=True,
+        convert_to_numpy=True,
+        show_progress_bar=False,
+    )
+
+    return embeddings.tolist()

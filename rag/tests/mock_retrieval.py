@@ -1,66 +1,116 @@
 """
-rag/tests/mock_retrieval.py
-────────────────────────────────────────────────────────────────────────────
-AQILA — Mock RetrievalResult Fixture for M1 and M2 Development
-Owner: M1 — AI / ML + RAG Core
+AQILA — Mock RetrievalResult Fixture
 
-PLACEHOLDER — M1 fills this with realistic mock data at Hour 0–2 of the hackathon.
+Used by M1/M2 during independent development.
 
-Purpose:
-  Provides a hardcoded list of RetrievalResult objects so that:
-  - M1 can test its own pipeline shapes before real ChromaDB retrieval works
-  - M2 can develop the pairwise cosine / graph / contradiction logic
-    WITHOUT waiting for M1 to complete real retrieval
-
-CONTRACT REQUIREMENTS (per v4.1 §4 Mock Data Strategy):
-  - Each mock result must include:
-      embedding: list[float]        — 384-dim random unit vector (MiniLM space)
-      embedding_space: str          — "minilm"
-  - This is sufficient for M2 to test pairwise cosine same-space guard
-  - mock_response.json (M3 mock) must NOT include embedding or embedding_space
-
-FROZEN FIELDS (must match docs/API_CONTRACTS.md after Hour 2):
-  query, source_id, source_type, chunk_id, text, score, modality,
-  page_number, timestamp_start, timestamp_end, file_name, file_created_at,
-  metadata, embedding, embedding_space
-
-References:
-  - docs/API_CONTRACTS.md  — RetrievalResult full contract
+Contains realistic text-only RetrievalResult dictionaries
+with 384-dimensional MiniLM embeddings.
 """
 
-import random
 import math
+import random
+from uuid import uuid4
 
-# TODO (M1, Hour 0–2): Replace this skeleton with realistic mock data.
-#   Include at least 2 sources, 4 chunks, all embedding_space="minilm",
-#   embedding as 384-dim unit vectors.
 
-def _random_unit_vector(dim: int = 384) -> list:
-    """Generate a random unit vector of given dimension."""
+def _random_unit_vector(dim: int = 384) -> list[float]:
+    """Generate a random unit vector."""
     vec = [random.gauss(0, 1) for _ in range(dim)]
+
     magnitude = math.sqrt(sum(x * x for x in vec))
+
     return [x / magnitude for x in vec]
 
 
-# Skeleton — M1 must replace with realistic RetrievalResult dicts/objects
-MOCK_RETRIEVAL_RESULTS: list[dict] = [
-    # TODO (M1, Hour 0–2): Populate with realistic mock RetrievalResult data
-    # Example shape (must match API_CONTRACTS.md exactly):
-    # {
-    #     "query": "Who was confirmed at the meeting?",
-    #     "source_id": "<uuid>",
-    #     "source_type": "pdf",
-    #     "chunk_id": "<uuid>",
-    #     "text": "Agent Mehra confirmed presence at Sector 7 on March 15 2024.",
-    #     "score": 0.92,
-    #     "modality": "text",
-    #     "page_number": 1,
-    #     "timestamp_start": None,
-    #     "timestamp_end": None,
-    #     "file_name": "field_report.pdf",
-    #     "file_created_at": "2024-03-15T03:00:00Z",
-    #     "metadata": {},
-    #     "embedding": _random_unit_vector(384),  # 384-dim unit vector
-    #     "embedding_space": "minilm",             # REQUIRED
-    # },
+SOURCE_A = str(uuid4())
+SOURCE_B = str(uuid4())
+
+CHUNK_A1 = str(uuid4())
+CHUNK_A2 = str(uuid4())
+CHUNK_B1 = str(uuid4())
+CHUNK_B2 = str(uuid4())
+
+
+MOCK_RETRIEVAL_RESULTS = [
+    {
+        "query": "What was the operation date?",
+        "source_id": SOURCE_A,
+        "source_type": "pdf",
+        "chunk_id": CHUNK_A1,
+        "text": (
+            "The operation was conducted in Sector 7 on "
+            "March 15, 2026. Agent Mehra confirmed presence "
+            "at the location."
+        ),
+        "score": 0.95,
+        "modality": "text",
+        "page_number": 1,
+        "timestamp_start": None,
+        "timestamp_end": None,
+        "file_name": "field_report.pdf",
+        "file_created_at": "2026-03-15T03:00:00Z",
+        "metadata": {},
+        "embedding": _random_unit_vector(384),
+        "embedding_space": "minilm",
+    },
+    {
+        "query": "What was the operation date?",
+        "source_id": SOURCE_A,
+        "source_type": "pdf",
+        "chunk_id": CHUNK_A2,
+        "text": (
+            "The field team reported that Agent Mehra "
+            "arrived at Sector 7 before the operation began."
+        ),
+        "score": 0.88,
+        "modality": "text",
+        "page_number": 2,
+        "timestamp_start": None,
+        "timestamp_end": None,
+        "file_name": "field_report.pdf",
+        "file_created_at": "2026-03-15T03:00:00Z",
+        "metadata": {},
+        "embedding": _random_unit_vector(384),
+        "embedding_space": "minilm",
+    },
+    {
+        "query": "What was the operation date?",
+        "source_id": SOURCE_B,
+        "source_type": "pdf",
+        "chunk_id": CHUNK_B1,
+        "text": (
+            "The operation was conducted in Sector 7 on "
+            "March 25, 2026. Agent Mehra was listed as "
+            "present at the location."
+        ),
+        "score": 0.91,
+        "modality": "text",
+        "page_number": 1,
+        "timestamp_start": None,
+        "timestamp_end": None,
+        "file_name": "field_report_b.pdf",
+        "file_created_at": "2026-03-25T03:00:00Z",
+        "metadata": {},
+        "embedding": _random_unit_vector(384),
+        "embedding_space": "minilm",
+    },
+    {
+        "query": "What was the operation date?",
+        "source_id": SOURCE_B,
+        "source_type": "pdf",
+        "chunk_id": CHUNK_B2,
+        "text": (
+            "The report states that the field team "
+            "completed the Sector 7 operation successfully."
+        ),
+        "score": 0.84,
+        "modality": "text",
+        "page_number": 2,
+        "timestamp_start": None,
+        "timestamp_end": None,
+        "file_name": "field_report_b.pdf",
+        "file_created_at": "2026-03-25T03:00:00Z",
+        "metadata": {},
+        "embedding": _random_unit_vector(384),
+        "embedding_space": "minilm",
+    },
 ]
